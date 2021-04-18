@@ -3,26 +3,23 @@ package communicationPack;
 import java.io.*;
 import java.net.ServerSocket;
 
-
-
 public class server extends Network {
 
     final int portNUm;
     ServerSocket serverSocket;
-
-    OutputStream outputStream;
-    OutputStreamWriter outputStreamWriter;
-    InputStream inputStream;
-    InputStreamReader inputStreamReader;
-    StringBuffer stringBuffer;
-    String request;
     int x;
 
     public server(int portNum) throws Exception {
         this.portNUm=portNum;
+        mode="SERVER";
         serverSocket = new ServerSocket(this.portNUm);
         socket=serverSocket.accept();
+
+        outputStream= socket.getOutputStream();
+        inputStream= socket.getInputStream();
+
     }
+
 
 
     /**
@@ -30,16 +27,17 @@ public class server extends Network {
      * @param data it contains a couple of coordinate (X,Y) or the fire result(hit,sunk). The hit and sunk positive-> value=1
      * @throws IOException smth
      */
-    public void sendData(int data[]) throws IOException {
+    public void SendData(int data[]) throws IOException {
         String dataString= data.toString();
-        outputStream= socket.getOutputStream();
+
         outputStreamWriter=new OutputStreamWriter(outputStream);
+
         outputStreamWriter.write(dataString);
         outputStreamWriter.flush();
     }
 
-    public int[] receiveData() throws IOException {
-        inputStream= socket.getInputStream();
+    public int[] ReceiveData() throws IOException {
+
         inputStreamReader=new InputStreamReader(inputStream);
         stringBuffer=new StringBuffer();
 
@@ -76,27 +74,24 @@ public class server extends Network {
         super.finalize();
     }
 
-    public int getPortNUm(){
+    public int GetPortNUm(){
         return portNUm;
     }
 
-
+// végső játékból törlendő
     public static void main(String[] args) throws Exception {
 
-        Network serverpart=new server(2000);
-
-
-
+        Network serverSide=new server(2000);
 
 
         int [] b=new int[2];
         b[0]=1;
         b[1]=2;
 
-        serverpart.sendData(b);
+        serverSide.SendData(b);
         System.out.println("send:"+b);
 
-        b=serverpart.receiveData();
+        b=serverSide.ReceiveData();
         System.out.println("receive:"+b);
 
 

@@ -6,17 +6,15 @@ import java.io.*;
 public class client extends Network {
 
      final int portNUm;
-     OutputStream outputStream;
-     OutputStreamWriter outputStreamWriter;
-     InputStream inputStream;
-     InputStreamReader inputStreamReader;
-     StringBuffer stringBuffer;
-     String request;
      int x;
 
     public client(int portNum) throws Exception {
         this.portNUm=portNum;
+        mode="CLIENT";
         socket  = new Socket("localhost",this.portNUm);
+
+        outputStream=socket.getOutputStream();
+        inputStream=socket.getInputStream();
     }
 
     /**
@@ -24,16 +22,16 @@ public class client extends Network {
      * @param data it contains a couple of coordinate (X,Y) or the fire result(hit,sunk). The hit and sunk positive-> value=1
      * @throws IOException smth
      */
-    public void sendData(int data[]) throws IOException {
+    public void SendData(int data[]) throws IOException {
         String dataString= data.toString();
-        outputStream=socket.getOutputStream();
+
         outputStreamWriter=new OutputStreamWriter(outputStream);
         outputStreamWriter.write(dataString);
         outputStreamWriter.flush();
     }
 
-    public int[] receiveData() throws IOException {
-        inputStream=socket.getInputStream();
+    public int[] ReceiveData() throws IOException {
+
         inputStreamReader=new InputStreamReader(inputStream);
         stringBuffer=new StringBuffer();
 
@@ -70,23 +68,24 @@ public class client extends Network {
         super.finalize();
     }
 
-    public int getPortNUm(){
+    public int GetPortNUm(){
         return portNUm;
     }
 
+    // végső játékból törlendő
     public static void main(String[] args) throws Exception {
-        client clientpart=new client(2000);
+        Network clientSide=new client(2000);
 
         int [] b=new int[2];
 
 
-        b=clientpart.receiveData();
+        b=clientSide.ReceiveData();
         System.out.println("receive:"+b);
 
         b[0]=3;
         b[1]=4;
 
-        clientpart.sendData(b);
+        clientSide.SendData(b);
         System.out.println("send:"+b);
 
 
