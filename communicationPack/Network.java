@@ -28,4 +28,9 @@ public  String getMode(){return  mode;}
     public void CloseConnection() throws IOException { socket.close();}
 
     public boolean startGame() throws IOException {return false;}
+
+    public void doRestart(){
+        int [] reset={-100,-100,-100};
+        SendData(reset);
+    }
 }

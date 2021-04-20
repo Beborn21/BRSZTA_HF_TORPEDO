@@ -18,6 +18,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
     int [][] shipmatrix = board.getShipMatrix();
     Network comInterface=null;
+    int[] resetSign={-100,-100,-100};
+
 
     String status = "MYTURN";
     JPanel [][] myshippanels = new JPanel[10][10];
@@ -96,20 +98,16 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
         if(status.equals("ENEMYSTURN")){
             this.enemysTurnGUI();   //disables clicks and sets text to enemys turn
-            //TODO add wait for shot method
-            try {
-                comInterface.ReceiveData(); // itt megkapja a koordináták tömbjét
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //waitForShot();
+
+            // add wait for shot method
+            waitForShot();
         }
 
     }
 
     private void waitForShot(){
-        int [] coordinates=new int[2];
-        int [] response={-1,-1};
+        int [] coordinates=new int[3];
+        int [] response=new int[3];
         while(status.equals("ENEMYSTURN")){ //itt maradunk amig mi nem jovunk
 /************************************************************************************************/
 /********************        TODO           WAIT FOR SHOT
@@ -121,10 +119,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             // recieve coordinates
 
             try {
-
                 coordinates=comInterface.ReceiveData();
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+
+            if(Arrays.equals(coordinates ,resetSign) ){
+                //TO DOO ha doRestart()
+
             }
             //chekkoljuk, hogy talált-e
             //board táblán megmondja hogy talált e a megadott koordináta
@@ -137,31 +139,21 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             }
 
 
-            //kommunikáció kezelése
-
-
-
-            /*if (talált) {
-                if(minden hajónk kilőve ==true){
-                    //TODO
-               }
-                //TODO
-            }else if(nem talált){
-                //TODO
-            }*/
-
-            //GUI kezelése
-
-            if (talalt) {
+            if (true==talalt) {
                 shootAtMyShipsGUI(coordinates[0], coordinates[1], "HIT");
-                comInterface.SendData(response);
-                if(vege ==true){
+                response[0]=1; //talált
+
+                if(true==vege){
+                    response[2]=1;
                     endoOfGameGUI("LOST");  //vesztettünk, kilép a methodbol
                 }
             }else {
+                response[0]=0; // nem talált
                 shootAtMyShipsGUI(coordinates[0], coordinates[1], "MISS");
                 myTurnGUI();        //újra mi jövünk, kilép a methodbol
             }
+
+            comInterface.SendData(response); // válasz küldése
 /**************************************************************************************************/
         }
     }
@@ -368,6 +360,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             this.setVisible(false);
             restart=true;
         }else if(e.getSource()==reconnectbutton){
+            comInterface.doRestart(); // elküldi a [-100,-100,-100] tömbeli értékeket amit minden vételnél vizsgálunk hogy ez jött-e #magyar
+            comInterface.CloseConnection();
 /**********************************************************************************************/
 /********************* TODO RECONNECT
  *
@@ -404,12 +398,22 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 //response = nullArray;
                 //response = comInterface.ReceiveData();
                 //HIT OR MISS
+
+                //TO DOO :MI küldünk restartot?
+
+
                 try {
                     comInterface.SendData(coord);
-                    response=comInterface.ReceiveData(); // visszakapjuk a két elemű tömböt ami tartalmazza a találatot és a süllyedést
+                    response=comInterface.ReceiveData(); // visszakapjuk a [találat,valami,restart]
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
+
+                if(Arrays.equals(response ,resetSign) ){
+                    //TO DOO ha doRestart()
+
+                }
+
 
                 if(x<y){    //comment out!
                 if (response[0]==1){  //a tömb első eleme jelzi ha talált, azaz az értéke =1

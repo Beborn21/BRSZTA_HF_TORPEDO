@@ -93,6 +93,8 @@ public class server extends Network {
         return portNUm;
     }
 
+    public void CloseConnection() throws IOException { socket.close(); serverSocket.close(); }
+
 
 }
 
