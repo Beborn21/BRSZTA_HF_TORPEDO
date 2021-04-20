@@ -108,10 +108,16 @@
     </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_i_6EAKDlEeu2_bt10FZR8w" name="endgame" visibility="private">
       <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
+      <defaultValue xmi:type="uml:LiteralBoolean" xmi:id="_9fPcUKITEeu97pxrB0i3GQ"/>
     </ownedAttribute>
     <ownedAttribute xmi:type="uml:Property" xmi:id="_FV8mcqDuEeu2_bt10FZR8w" type="_w2Z2kKDhEeu2_bt10FZR8w" aggregation="composite" association="_FV7_YKDuEeu2_bt10FZR8w">
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_noraYKDvEeu2_bt10FZR8w" value="10"/>
       <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_nozWMKDvEeu2_bt10FZR8w" value="10"/>
+    </ownedAttribute>
+    <ownedAttribute xmi:type="uml:Property" xmi:id="_0ymHMKIREeu97pxrB0i3GQ" name="ShipMatrix" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_7xUM0KIREeu97pxrB0i3GQ" value="10"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_7xi2UKIREeu97pxrB0i3GQ" value="10"/>
     </ownedAttribute>
     <ownedOperation xmi:type="uml:Operation" xmi:id="__hnxAKDlEeu2_bt10FZR8w" name="GameBoard">
       <ownedParameter xmi:type="uml:Parameter" xmi:id="_l0eA4KDmEeu2_bt10FZR8w" type="_KABUcKDkEeu2_bt10FZR8w" direction="return"/>
@@ -127,52 +133,45 @@
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Boolean"/>
       </ownedParameter>
     </ownedOperation>
-    <nestedClassifier xmi:type="uml:Class" xmi:id="_a4w2YKDoEeu2_bt10FZR8w" name="MakeBoard">
-      <ownedAttribute xmi:type="uml:Property" xmi:id="_mDx9UKDoEeu2_bt10FZR8w" name="ShipNumber" visibility="private">
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_OnN70KISEeu97pxrB0i3GQ" name="getRandomNumberUsingInts" visibility="private">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_cIyqcKISEeu97pxrB0i3GQ" name="min">
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
-        <defaultValue xmi:type="uml:LiteralInteger" xmi:id="_UFsKoKDpEeu2_bt10FZR8w" value="10"/>
-      </ownedAttribute>
-      <ownedAttribute xmi:type="uml:Property" xmi:id="_mGprIKDoEeu2_bt10FZR8w" name="ShipMatrix" visibility="private">
+      </ownedParameter>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_edOLMKISEeu97pxrB0i3GQ" name="max">
         <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
-        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zu_eMKDqEeu2_bt10FZR8w" value="10"/>
-        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zvJPMKDqEeu2_bt10FZR8w" value="10"/>
-      </ownedAttribute>
-      <ownedAttribute xmi:type="uml:Property" xmi:id="_HUORAaDuEeu2_bt10FZR8w" type="_w2Z2kKDhEeu2_bt10FZR8w" aggregation="composite" association="_HUNC4KDuEeu2_bt10FZR8w"/>
-      <ownedOperation xmi:type="uml:Operation" xmi:id="_N__FwKDrEeu2_bt10FZR8w" name="MakeBoard">
-        <ownedParameter xmi:type="uml:Parameter" xmi:id="_Xb18MKDrEeu2_bt10FZR8w" type="_a4w2YKDoEeu2_bt10FZR8w" direction="return"/>
-      </ownedOperation>
-      <ownedOperation xmi:type="uml:Operation" xmi:id="_PhVjwKDrEeu2_bt10FZR8w" name="getRandomNumberUsingInt" visibility="private">
-        <ownedParameter xmi:type="uml:Parameter" xmi:id="_e7ztsKDrEeu2_bt10FZR8w" name="min">
-          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
-        </ownedParameter>
-        <ownedParameter xmi:type="uml:Parameter" xmi:id="_hLTEEKDrEeu2_bt10FZR8w" name="max">
-          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
-        </ownedParameter>
-        <ownedParameter xmi:type="uml:Parameter" xmi:id="_jn7ekKDrEeu2_bt10FZR8w" direction="return">
-          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
-        </ownedParameter>
-      </ownedOperation>
-      <ownedOperation xmi:type="uml:Operation" xmi:id="_Pnt4kKDrEeu2_bt10FZR8w" name="ReadShipMatrix" visibility="private">
-        <ownedParameter xmi:type="uml:Parameter" xmi:id="_1rcuYKDrEeu2_bt10FZR8w" name="filename">
-          <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-        </ownedParameter>
-      </ownedOperation>
-      <ownedOperation xmi:type="uml:Operation" xmi:id="_PtX0oKDrEeu2_bt10FZR8w" name="rotate90Clockwise" visibility="private"/>
-      <ownedOperation xmi:type="uml:Operation" xmi:id="_Pych4KDrEeu2_bt10FZR8w" name="flipHorisontal" visibility="private"/>
-      <ownedOperation xmi:type="uml:Operation" xmi:id="_P3idQKDrEeu2_bt10FZR8w" name="flipVertical" visibility="private"/>
-      <ownedOperation xmi:type="uml:Operation" xmi:id="_P8q04KDrEeu2_bt10FZR8w" name="makefreeShipArray" visibility="private">
-        <ownedParameter xmi:type="uml:Parameter" xmi:id="_PZXeEKDsEeu2_bt10FZR8w" type="_w2Z2kKDhEeu2_bt10FZR8w" direction="return">
-          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_UQchwKDsEeu2_bt10FZR8w" value="10"/>
-          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UQmSwKDsEeu2_bt10FZR8w" value="10"/>
-        </ownedParameter>
-      </ownedOperation>
-      <ownedOperation xmi:type="uml:Operation" xmi:id="_W8f4UKDsEeu2_bt10FZR8w" name="ShipMatrixtoShipArray">
-        <ownedParameter xmi:type="uml:Parameter" xmi:id="_u-6IcKDsEeu2_bt10FZR8w" type="_w2Z2kKDhEeu2_bt10FZR8w" direction="return">
-          <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_zBcJwKDsEeu2_bt10FZR8w" value="10"/>
-          <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_zBmh0KDsEeu2_bt10FZR8w" value="10"/>
-        </ownedParameter>
-      </ownedOperation>
-    </nestedClassifier>
+      </ownedParameter>
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_ggJFMKISEeu97pxrB0i3GQ" direction="return">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_RHtioKISEeu97pxrB0i3GQ" name="MakeBoard" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_ROuwoKISEeu97pxrB0i3GQ" name="ReadShipMatrix" visibility="private">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_zDiH4KISEeu97pxrB0i3GQ" name="filename">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_RTD3AKISEeu97pxrB0i3GQ" name="getShipMatrix">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_8Os28KISEeu97pxrB0i3GQ" direction="return">
+        <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#Integer"/>
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_IYPwwKIVEeu97pxrB0i3GQ" value="10"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_IYY6sKIVEeu97pxrB0i3GQ" value="10"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_RWEuwKISEeu97pxrB0i3GQ" name="rotate90Clockwise" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_RYyrkKISEeu97pxrB0i3GQ" name="flipHorisontal" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_RbqZYKISEeu97pxrB0i3GQ" name="flipVertical" visibility="private"/>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_ReXvIKISEeu97pxrB0i3GQ" name="makefreeShipArray" visibility="private">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_T4TlgKITEeu97pxrB0i3GQ" type="_w2Z2kKDhEeu2_bt10FZR8w" direction="return">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_V3ufkKITEeu97pxrB0i3GQ" value="10"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_V33pgKITEeu97pxrB0i3GQ" value="10"/>
+      </ownedParameter>
+    </ownedOperation>
+    <ownedOperation xmi:type="uml:Operation" xmi:id="_RhLykKISEeu97pxrB0i3GQ" name="ShipMatrixtoShipArray">
+      <ownedParameter xmi:type="uml:Parameter" xmi:id="_pduOwKITEeu97pxrB0i3GQ" type="_w2Z2kKDhEeu2_bt10FZR8w" direction="return">
+        <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_r9YIEKITEeu97pxrB0i3GQ" value="10"/>
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_r9mxkKITEeu97pxrB0i3GQ" value="10"/>
+      </ownedParameter>
+    </ownedOperation>
   </packagedElement>
   <packagedElement xmi:type="uml:Association" xmi:id="_EPO2AKDuEeu2_bt10FZR8w" memberEnd="_EPUVkKDuEeu2_bt10FZR8w _EPU8oKDuEeu2_bt10FZR8w">
     <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_EPSgYKDuEeu2_bt10FZR8w" source="org.eclipse.papyrus">
@@ -188,15 +187,6 @@
     </eAnnotations>
     <ownedEnd xmi:type="uml:Property" xmi:id="_FV9NgaDuEeu2_bt10FZR8w" type="_KABUcKDkEeu2_bt10FZR8w" association="_FV7_YKDuEeu2_bt10FZR8w">
       <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_p6sD0KDwEeu2_bt10FZR8w"/>
-    </ownedEnd>
-  </packagedElement>
-  <packagedElement xmi:type="uml:Association" xmi:id="_HUNC4KDuEeu2_bt10FZR8w" memberEnd="_HUORAaDuEeu2_bt10FZR8w _HUO4EqDuEeu2_bt10FZR8w">
-    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_HUNp8KDuEeu2_bt10FZR8w" source="org.eclipse.papyrus">
-      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_HUORAKDuEeu2_bt10FZR8w" key="nature" value="UML_Nature"/>
-    </eAnnotations>
-    <ownedEnd xmi:type="uml:Property" xmi:id="_HUO4EqDuEeu2_bt10FZR8w" type="_a4w2YKDoEeu2_bt10FZR8w" association="_HUNC4KDuEeu2_bt10FZR8w">
-      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_iX6rYKDvEeu2_bt10FZR8w" value="10"/>
-      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_iZIMUKDvEeu2_bt10FZR8w" value="10"/>
     </ownedEnd>
   </packagedElement>
 </uml:Model>
