@@ -1,5 +1,6 @@
 package gui_and_control_pack;
 
+import brsta.*;
 import communicationPack.*;
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +14,9 @@ import java.io.IOException;
 public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
     //TODO add ship and network variables
-    int [][] shipmatrix = new int[10][10];
+    GameBoard board=new  GameBoard();
+
+    int [][] shipmatrix = board.getShipMatrix();
     Network comInterface=null;
 
     String status = "MYTURN";
@@ -105,7 +108,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     }
 
     private void waitForShot(){
-        int [] coordinates={-1,-1};
+        int [] coordinates=new int[2];
         int [] response={-1,-1};
         while(status.equals("ENEMYSTURN")){ //itt maradunk amig mi nem jovunk
 /************************************************************************************************/
@@ -118,16 +121,25 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             // recieve coordinates
 
             try {
+
                 coordinates=comInterface.ReceiveData();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             //chekkoljuk, hogy talált-e
+            //board táblán megmondja hogy talált e a megadott koordináta
+            boolean talalt= board.fireGameBoard(new ShipSegment(coordinates[0],coordinates[1]));
+            boolean vege= board.EndGame();
+            try {
+                comInterface.SendData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
             //kommunikáció kezelése
 
-            //comInterface.SendData(response);
+
 
             /*if (talált) {
                 if(minden hajónk kilőve ==true){
@@ -139,15 +151,17 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             }*/
 
             //GUI kezelése
-            /*if (talált) {
-                shootAtMyShipsGUI(coordinates[0], coordiantes[1], "HIT");
-                if(minden hajónk kilőve ==true){
+
+            if (talalt) {
+                shootAtMyShipsGUI(coordinates[0], coordinates[1], "HIT");
+                comInterface.SendData(response);
+                if(vege ==true){
                     endoOfGameGUI("LOST");  //vesztettünk, kilép a methodbol
                 }
-            }else if(nem talált){
-                shootAtMyShipsGUI(coordinates[0], coordiantes[1], "MISS");
+            }else {
+                shootAtMyShipsGUI(coordinates[0], coordinates[1], "MISS");
                 myTurnGUI();        //újra mi jövünk, kilép a methodbol
-            }*/
+            }
 /**************************************************************************************************/
         }
     }
