@@ -1,5 +1,6 @@
 package gui_and_control_pack;
 
+import communicationPack.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +14,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
     //TODO add ship and network variables
     int [][] shipmatrix = new int[10][10];
-
+    Network comInterface=null;
 
     String status = "MYTURN";
     JPanel [][] myshippanels = new JPanel[10][10];
@@ -70,8 +71,18 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         //clicks disabled until start of game
         computingGUI();
 
-        // TODO update network variable based on port and mode (@Levi)
+        // update network variable based on port and mode (@Levi)
 
+        try {
+            if(mode=="SERVER"){
+                comInterface=new server(port);
+            }
+            else{
+                comInterface=new client(port);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if(mode.equals("SERVER")){  //mi kezdünk
             myTurnGUI();
@@ -79,16 +90,23 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             enemysTurnGUI();    //az ellenfél kezd, kattintás letiltva
         }
 
-        /*
+
         if(status.equals("ENEMYSTURN")){
             this.enemysTurnGUI();   //disables clicks and sets text to enemys turn
             //TODO add wait for shot method
+            try {
+                comInterface.ReceiveData(); // itt megkapja a koordináták tömbjét
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             //waitForShot();
         }
-        */
+
     }
 
     private void waitForShot(){
+        int [] coordinates={-1,-1};
+        int [] response={-1,-1};
         while(status.equals("ENEMYSTURN")){ //itt maradunk amig mi nem jovunk
 /************************************************************************************************/
 /********************        TODO           WAIT FOR SHOT
@@ -97,13 +115,20 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
  *
   */
 /************************************************************************************************/
-            // TODO recieve coordinates
-            //coordinates = nullArray;
-            //coordinates = comInterface.ReceiveData();
+            // recieve coordinates
 
+            try {
+                coordinates=comInterface.ReceiveData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             //chekkoljuk, hogy talált-e
 
+
             //kommunikáció kezelése
+
+            //comInterface.SendData(response);
+
             /*if (talált) {
                 if(minden hajónk kilőve ==true){
                     //TODO
@@ -348,6 +373,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             int [] coord = getCoordinates(e.getComponent().getLocation());
             int x = coord[0];
             int y = coord[1];
+            int [] response={-1,-1};
             if(!hasBeenShotAt(x, y)){
 /**********************************************************************************************/
 /********************* TODO SHOT
@@ -364,8 +390,15 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 //response = nullArray;
                 //response = comInterface.ReceiveData();
                 //HIT OR MISS
+                try {
+                    comInterface.SendData(coord);
+                    response=comInterface.ReceiveData(); // visszakapjuk a két elemű tömböt ami tartalmazza a találatot és a süllyedést
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+
                 if(x<y){    //comment out!
-                //if (response[0]==1){  //a tömb első eleme jelzi ha talált, azaz az értéke =1
+                if (response[0]==1){  //a tömb első eleme jelzi ha talált, azaz az értéke =1
                     shootAtEnemyShipsGUI(x, y, "HIT"); //jelezzük a táblán a találatot
                        /* if(nyertünk){
                             endOfGameGUI("WON");
@@ -373,7 +406,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
                     myTurnGUI();     // juhu újra mi jövünk, újra szabad kattintani
                 }
-                //else if (response[0]==0){
+                else if (response[0]==0) {
+
+                }
+                }
                 else{ //comment out!!
                     shootAtEnemyShipsGUI(x, y, "MISS"); //jelezzük a táblán a hibát
                     enemysTurnGUI(); // már nem mi jövünk, kattintások továbbra is letiltva

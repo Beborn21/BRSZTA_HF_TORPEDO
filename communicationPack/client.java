@@ -62,34 +62,10 @@ public class client extends Network {
     }
 
 
-    @Override
-    protected void finalize() throws Throwable {
-        socket.close();
-        super.finalize();
-    }
-
     public int GetPortNUm(){
         return portNUm;
     }
 
-    // végső játékból törlendő
-    public static void main(String[] args) throws Exception {
-        Network clientSide=new client(2000);
-
-        int [] b=new int[2];
-
-
-        b=clientSide.ReceiveData();
-        System.out.println("receive:"+b);
-
-        b[0]=3;
-        b[1]=4;
-
-        clientSide.SendData(b);
-        System.out.println("send:"+b);
-
-
-    }
 }
 
 
