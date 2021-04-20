@@ -27,17 +27,5 @@ public  String getMode(){return  mode;}
 
     public void CloseConnection() throws IOException { socket.close();}
 
-    public boolean startGame() throws IOException {
-        int[] newGame={-1,-1};
-        int [] response=new int[2];
-        boolean isStart=false;
-
-        SendData(newGame);
-        response=ReceiveData();
-
-        if(response==newGame){
-            isStart=true;
-        }
-        return isStart;
-    }
+    public boolean startGame() throws IOException {return false;}
 }

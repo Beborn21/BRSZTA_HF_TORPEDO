@@ -1,13 +1,14 @@
 package communicationPack;
 
 import java.io.*;
-import java.net.ServerSocket;
+import java.net.*;
+import java.util.Arrays;
 
 public class server extends Network {
 
     final int portNUm;
     ServerSocket serverSocket;
-    int x;
+
 
     public server(int portNum) throws Exception {
         this.portNUm=portNum;
@@ -28,7 +29,7 @@ public class server extends Network {
      * @throws IOException smth
      */
     public void SendData(int data[]) throws IOException {
-        String dataString= data.toString();
+        String dataString= Arrays.toString(data);
 
         outputStreamWriter=new OutputStreamWriter(outputStream);
 
@@ -37,12 +38,12 @@ public class server extends Network {
     }
 
     public int[] ReceiveData() throws IOException {
-
+        int x=0;
         inputStreamReader=new InputStreamReader(inputStream);
         stringBuffer=new StringBuffer();
 
-        int data[]=new int[2];
-        int temp1;
+        int []data=new int[2];
+        int temp1,temp2;
         int data1;
         int data2;
         String part1,part2;
@@ -50,27 +51,42 @@ public class server extends Network {
         while(true)
         {
             x=inputStreamReader.read();
-            if(x=='#' || x==-1) break;
             stringBuffer.append((char)x);
+            if(x==']') break;
         }
         request=stringBuffer.toString();
 
         temp1=request.indexOf(",");
-        part1=request.substring(0,temp1);
-        part2=request.substring(temp1+1);
+        part1=request.substring(1,temp1);
+        temp2=request.indexOf("]");
+        part2=request.substring(temp1+2,temp2);
 
         data1=Integer.parseInt(part1);
         data2=Integer.parseInt(part2);
-        data[1]=data1;
-        data[2]=data2;
+        data[0]=data1;
+        data[1]=data2;
 
         return data;
     }
 
+   public boolean startGame() throws IOException {
+        int[] newGame={-1,-1};
+        int [] response=new int[2];
+        boolean isStart=false;
+
+        SendData(newGame);
+        response=ReceiveData();
+
+        if(Arrays.equals(response ,newGame)){
+            isStart=true;
+        }
+        return isStart;
+    }
 
     public int GetPortNUm(){
         return portNUm;
     }
+
 
 }
 
