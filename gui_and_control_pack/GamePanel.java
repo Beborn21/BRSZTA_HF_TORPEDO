@@ -1,6 +1,7 @@
 package gui_and_control_pack;
 
 import brsta.*;
+import brsta.GameBoard;
 import communicationPack.*;
 import javax.swing.*;
 import java.awt.*;
@@ -10,18 +11,19 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
     //TODO add ship and network variables
     GameBoard board=new  GameBoard();
 
-    int [][] shipmatrix = board.getShipMatrix();
+    int [][] shipmatrix=new int[10][10];
     Network comInterface=null;
-    int[] resetSign={-100,-100,-100};
+    int[] resetSign={-100,-100};
 
 
-    String status = "MYTURN";
+    String status = "COMPUTING";
     JPanel [][] myshippanels = new JPanel[10][10];
     JPanel [][] enemyshippanels = new JPanel[10][10];
     JButton restartbutton;
@@ -46,8 +48,11 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     static final Color targetaquiredcolor = new Color(0xFFDD4A);
     static Font PixelFont50;
     static Font PixelFont20;
+    private int[] response;
 
     GamePanel(int port, String mode){
+
+        System.out.println("game constructor opened");
 
         //panel look setup
         fontSetup();
@@ -55,16 +60,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         this.setBackground(backgroundcolor);
         this.setLayout(null);
 
-/**** ships dummie version just to fill matrix   *******/
-        // TODO implement board (@Sári)
-        shipmatrix = new int[10][10];
-        for(int rows = 0; rows<10;rows++){
-            for(int columns = 0; columns<10;columns++){
-                shipmatrix[rows][columns] = (rows*columns)%2;
-            }
-        }
-/*******************************************************/
+
+
         // add panels to game
+        shipmatrix = board.getShipMatrix();
         this.addMyNavy(shipmatrix);              //TODO give ship placement as parameter
         this.addEnemyNavy();
         this.addSea();
@@ -75,19 +74,35 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
         //clicks disabled until start of game
         computingGUI();
+        System.out.println("computing gui implemented");
 
         // update network variable based on port and mode (@Levi)
 
         try {
             if(mode=="SERVER"){
                 comInterface=new server(port);
+                System.out.println("new server initialised");
             }
             else{
                 comInterface=new client(port);
+                System.out.println("new client initialised");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("new server/client fail");
         }
+
+
+        /*** TODO szinkronizáció**/
+
+        try {
+            while(!comInterface.startGame()){
+                System.out.println("while");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         if(mode.equals("SERVER")){  //mi kezdünk
             myTurnGUI();
@@ -106,8 +121,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     }
 
     private void waitForShot(){
-        int [] coordinates=new int[3];
-        int [] response=new int[3];
+        int [] coordinates=new int[2];
+        response = new int[2];
         while(status.equals("ENEMYSTURN")){ //itt maradunk amig mi nem jovunk
 /************************************************************************************************/
 /********************        TODO           WAIT FOR SHOT
@@ -128,32 +143,41 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 //TO DOO ha doRestart()
 
             }
-            //chekkoljuk, hogy talált-e
+
             //board táblán megmondja hogy talált e a megadott koordináta
             boolean talalt= board.fireGameBoard(new ShipSegment(coordinates[0],coordinates[1]));
             boolean vege= board.EndGame();
+
+            if (true==talalt) {
+                response[0] = 1;
+                if(true==vege){
+                    response[1] = 1;
+                }
+            }else {
+                response[0] = 0;
+            }
+
             try {
-                comInterface.SendData();
+                comInterface.SendData(response); // válasz küldése
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-
             if (true==talalt) {
                 shootAtMyShipsGUI(coordinates[0], coordinates[1], "HIT");
-                response[0]=1; //talált
+                
 
                 if(true==vege){
-                    response[2]=1;
+                    
                     endoOfGameGUI("LOST");  //vesztettünk, kilép a methodbol
                 }
             }else {
-                response[0]=0; // nem talált
+                
                 shootAtMyShipsGUI(coordinates[0], coordinates[1], "MISS");
                 myTurnGUI();        //újra mi jövünk, kilép a methodbol
             }
 
-            comInterface.SendData(response); // válasz küldése
+            
 /**************************************************************************************************/
         }
     }
@@ -361,7 +385,11 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             restart=true;
         }else if(e.getSource()==reconnectbutton){
             comInterface.doRestart(); // elküldi a [-100,-100,-100] tömbeli értékeket amit minden vételnél vizsgálunk hogy ez jött-e #magyar
-            comInterface.CloseConnection();
+            try {
+                comInterface.CloseConnection();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
 /**********************************************************************************************/
 /********************* TODO RECONNECT
  *
@@ -415,7 +443,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 }
 
 
-                if(x<y){    //comment out!
+                   //comment out!
                 if (response[0]==1){  //a tömb első eleme jelzi ha talált, azaz az értéke =1
                     shootAtEnemyShipsGUI(x, y, "HIT"); //jelezzük a táblán a találatot
                        /* if(nyertünk){
@@ -425,13 +453,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                     myTurnGUI();     // juhu újra mi jövünk, újra szabad kattintani
                 }
                 else if (response[0]==0) {
-
-                }
-                }
-                else{ //comment out!!
                     shootAtEnemyShipsGUI(x, y, "MISS"); //jelezzük a táblán a hibát
                     enemysTurnGUI(); // már nem mi jövünk, kattintások továbbra is letiltva
-                    //waitForShot();
+                    waitForShot();
                 }
             }
         }

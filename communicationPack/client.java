@@ -32,17 +32,17 @@ public class client extends Network {
 
     }
 
-     public int[] ReceiveData() throws IOException {
+    public int[] ReceiveData() throws IOException {
         int x=0;
         inputStreamReader=new InputStreamReader(inputStream);
         stringBuffer=new StringBuffer();
 
-        int []data=new int[3];
-        int temp1,temp2,temp3;
+        int []data=new int[2];
+        int temp1,temp2;
         int data1;
         int data2;
-        int data3;
-        String part1,part2,part3;
+
+        String part1,part2;
 
         while(true)
         {
@@ -54,25 +54,24 @@ public class client extends Network {
 
         temp1=request.indexOf(",");
         part1=request.substring(1,temp1);
-        temp2=request.indexOf(",",temp1+1);
+        temp2=request.indexOf("]");
         part2=request.substring(temp1+2,temp2);
 
-        temp3=request.indexOf("]");
-        part3=request.substring(temp2+2,temp3);
+
 
         data1=Integer.parseInt(part1);
         data2=Integer.parseInt(part2);
-        data3=Integer.parseInt(part3);
+
         data[0]=data1;
         data[1]=data2;
-        data[2]=data3;
+
 
         return data;
     }
 
     public boolean startGame() throws IOException {
-        int[] newGame={-1,-1,-1};
-        int [] response=new int[3];
+        int[] newGame={-1,-1};
+        int [] response=new int[2];
         boolean isStart=false;
 
         SendData(newGame);
@@ -83,6 +82,7 @@ public class client extends Network {
         }
         return isStart;
     }
+
 
     public int GetPortNUm(){
         return portNUm;

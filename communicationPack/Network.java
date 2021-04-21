@@ -30,7 +30,11 @@ public  String getMode(){return  mode;}
     public boolean startGame() throws IOException {return false;}
 
     public void doRestart(){
-        int [] reset={-100,-100,-100};
-        SendData(reset);
+        int [] reset={-100,-100};
+        try {
+            SendData(reset);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
