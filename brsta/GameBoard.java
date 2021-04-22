@@ -97,7 +97,7 @@ public class GameBoard {
                 for (int i = 0; i < m; i++) {
                     for (int j = 0; j < n; j++) {
                         try{//    System.out.println("number is ");
-                            this.ShipMatrix[j][i] = input.nextInt(); //itt felcserelte i,j-t hogy jo legen az x, és y iray
+                            this.ShipMatrix[i][j] = input.nextInt();
 
                         }
                         catch (java.util.NoSuchElementException e) {
@@ -111,24 +111,9 @@ public class GameBoard {
         }
     }
 
-    public int [][] getShipMatrix() //ezt írtam át úgy, hogy binarisan adja vissza, ahol 1 ott van hajó.
-    {
-        int [] [] ShipMatrixBinar=new int [10] [10];
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                if(this.ShipMatrix[i][j]!=0) {
-                    ShipMatrixBinar[i][j] = 1;
-                } else {
-                    ShipMatrixBinar[i][j] = 0;
-                }
-            }
-        }
-        return ShipMatrixBinar;
+    public int [][] getShipMatrix(){
+        return this.ShipMatrix;
     }
-
-
-
-
 
     private void rotate90Clockwise()
     {
@@ -188,7 +173,7 @@ public class GameBoard {
                 if (ShipMatrix[i][j]!=0){
                     for(int k=0; k<10;k++){
                         if(newShipArray[k].getShipID()==ShipMatrix[i][j]){
-                            ShipSegment newSegment=new ShipSegment(i,j);//itt felcsereltem i,j-t
+                            ShipSegment newSegment=new ShipSegment(j,i);
                             newShipArray[k].addSegment(newSegment);
                         }
                     }

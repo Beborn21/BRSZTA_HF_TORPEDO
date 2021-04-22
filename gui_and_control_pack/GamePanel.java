@@ -21,7 +21,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     int [][] shipmatrix=new int[10][10];
     Network comInterface=null;
     int[] resetSign={-100,-100};
-
+    int port;
+    String mode;
 
     String status = "COMPUTING";
     JPanel [][] myshippanels = new JPanel[10][10];
@@ -51,8 +52,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     private int[] response;
 
     GamePanel(int port, String mode){
-
         System.out.println("game constructor opened");
+        this.port=port;
+        this.mode=mode;
 
         //panel look setup
         fontSetup();
@@ -76,33 +78,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         computingGUI();
         System.out.println("computing gui implemented");
 
-        // update network variable based on port and mode (@Levi)
-
-        try {
-            if(mode=="SERVER"){
-                comInterface=new server(port);
-                System.out.println("new server initialised");
-            }
-            else{
-                comInterface=new client(port);
-                System.out.println("new client initialised");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("new server/client fail");
-        }
-
-
-        /*** TODO szinkronizáció**/
-
-        try {
-            while(!comInterface.startGame()){
-                System.out.println("while");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        Connect();
 
         if(mode.equals("SERVER")){  //mi kezdünk
             myTurnGUI();
@@ -118,6 +94,39 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             waitForShot();
         }
 
+    }
+
+
+    private void Connect(){
+        // update network variable based on port and mode (@Levi)
+        boolean connected=false;
+        while(!connected) {
+            try {
+                if (mode == "SERVER") {
+                    comInterface = new server(port);
+                    System.out.println("new server initialised");
+                    connected=true;
+                } else {
+                    comInterface = new client(port);
+                    System.out.println("new client initialised");
+                    connected=true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("new server/client fail");
+
+            }
+        }
+
+        /*** TODO szinkronizáció**/
+
+        try {
+            while(!comInterface.startGame()){
+                System.out.println("while");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void waitForShot(){
@@ -141,7 +150,8 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
             if(Arrays.equals(coordinates ,resetSign) ){
                 //TO DOO ha doRestart()
-
+                Connect();
+                System.out.println("The other player pushed the restart button");
             }
 
             //board táblán megmondja hogy talált e a megadott koordináta
@@ -381,6 +391,13 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
  *
  */
 /**********************************************************************************************/
+            comInterface.doRestart(); // elküldi a [-100,-100,-100] tömbeli értékeket amit minden vételnél vizsgálunk hogy ez jött-e #magyar
+            try {
+                comInterface.CloseConnection();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+
             this.setVisible(false);
             restart=true;
         }else if(e.getSource()==reconnectbutton){
