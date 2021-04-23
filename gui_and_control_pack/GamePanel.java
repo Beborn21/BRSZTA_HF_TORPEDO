@@ -463,9 +463,14 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                    //comment out!
                 if (response[0]==1){  //a tömb első eleme jelzi ha talált, azaz az értéke =1
                     shootAtEnemyShipsGUI(x, y, "HIT"); //jelezzük a táblán a találatot
-                       /* if(nyertünk){
-                            endOfGameGUI("WON");
-                        }*/
+                    if(response[1]==1){
+                        //jatek vége jött a masik oldalrol -> nyertünk
+                        endoOfGameGUI("WON");
+
+                    }
+
+
+
 
                     myTurnGUI();     // juhu újra mi jövünk, újra szabad kattintani
                 }
@@ -478,6 +483,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         }
 
     }
+
+
+
     @Override
     public void mousePressed(MouseEvent e) {}
     @Override
