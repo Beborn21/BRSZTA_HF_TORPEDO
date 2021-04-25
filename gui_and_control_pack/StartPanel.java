@@ -111,7 +111,7 @@ public class StartPanel extends JPanel implements ActionListener {
     }
 
     private void addPortQuieryLabel(){
-        JLabel label = new JLabel("ENTER IP ADDRESS:", SwingConstants.CENTER);
+        JLabel label = new JLabel("ENTER PORT NUMBER:", SwingConstants.CENTER);
         label.setSize(1000, 100);
         label.setLocation(0, 300);
         label.setForeground(GamePanel.navylabelcolor);

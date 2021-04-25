@@ -11,17 +11,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+
 
 public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
     //TODO add ship and network variables
     GameBoard board=new  GameBoard();
+    Network comInterface;
+    int [][] shipmatrix;
+    int []lastHitCoordinate=new int[2];
 
-    int [][] shipmatrix=new int[10][10];
-    Network comInterface=null;
-    int[] resetSign={-100,-100};
-    int port;
+
     String mode;
 
     String status = "COMPUTING";
@@ -49,11 +49,9 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     static final Color targetaquiredcolor = new Color(0xFFDD4A);
     static Font PixelFont50;
     static Font PixelFont20;
-    private int[] response;
 
-    GamePanel(int port, String mode){
+    GamePanel(int port ,String mode){
         System.out.println("game constructor opened");
-        this.port=port;
         this.mode=mode;
 
         //panel look setup
@@ -78,7 +76,20 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         computingGUI();
         System.out.println("computing gui implemented");
 
-        Connect();
+        try {
+            if (mode == "SERVER") {
+                comInterface = new server(port, this);
+                System.out.println("new server initialised");
+            } else {
+                comInterface = new client(port,this);
+                System.out.println("new client initialised");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("new server/client fail");
+
+        }
+
 
         if(mode.equals("SERVER")){  //mi kezdünk
             myTurnGUI();
@@ -89,50 +100,17 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
         if(status.equals("ENEMYSTURN")){
             this.enemysTurnGUI();   //disables clicks and sets text to enemys turn
-
-            // add wait for shot method
-            waitForShot();
         }
 
     }
 
 
-    private void Connect(){
-        // update network variable based on port and mode (@Levi)
-        boolean connected=false;
-        while(!connected) {
-            try {
-                if (mode == "SERVER") {
-                    comInterface = new server(port);
-                    System.out.println("new server initialised");
-                    connected=true;
-                } else {
-                    comInterface = new client(port);
-                    System.out.println("new client initialised");
-                    connected=true;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("new server/client fail");
 
-            }
-        }
 
-        /*** TODO szinkronizáció**/
-
-        try {
-            while(!comInterface.startGame()){
-                System.out.println("while");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void waitForShot(){
-        int [] coordinates=new int[2];
-        response = new int[2];
-        while(status.equals("ENEMYSTURN")){ //itt maradunk amig mi nem jovunk
+    public void waitForShot(int [] coordinates){
+        System.out.println("\n Wait for Shot method");
+        int [] response = new int[3];
+        response[2]=1;
 /************************************************************************************************/
 /********************        TODO           WAIT FOR SHOT
  *
@@ -141,18 +119,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
   */
 /************************************************************************************************/
             // recieve coordinates
-
-            try {
-                coordinates=comInterface.ReceiveData();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if(Arrays.equals(coordinates ,resetSign) ){
-                //TO DOO ha doRestart()
-                Connect();
-                System.out.println("The other player pushed the restart button");
-            }
 
             //board táblán megmondja hogy talált e a megadott koordináta
             boolean talalt= board.fireGameBoard(new ShipSegment(coordinates[0],coordinates[1]));
@@ -175,8 +141,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
             if (true==talalt) {
                 shootAtMyShipsGUI(coordinates[0], coordinates[1], "HIT");
-                
-
                 if(true==vege){
                     
                     endoOfGameGUI("LOST");  //vesztettünk, kilép a methodbol
@@ -189,7 +153,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
             
 /**************************************************************************************************/
-        }
+
     }
 
     private void fontSetup(){
@@ -342,6 +306,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 /** GUI methods to call when turn is changed or computing or endofgame */
     public void enemysTurnGUI(){
             status="ENEMYSTURN";
+
             turnlabel.setText("ENEMYS TURN");
         this.repaint();
     }
@@ -392,21 +357,11 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
  */
 /**********************************************************************************************/
             comInterface.doRestart(); // elküldi a [-100,-100,-100] tömbeli értékeket amit minden vételnél vizsgálunk hogy ez jött-e #magyar
-            try {
-                comInterface.CloseConnection();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
 
-            this.setVisible(false);
-            restart=true;
+            restartFunc();
+
         }else if(e.getSource()==reconnectbutton){
-            comInterface.doRestart(); // elküldi a [-100,-100,-100] tömbeli értékeket amit minden vételnél vizsgálunk hogy ez jött-e #magyar
-            try {
-                comInterface.CloseConnection();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            comInterface.doReconnect();
 /**********************************************************************************************/
 /********************* TODO RECONNECT
  *
@@ -415,10 +370,37 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
  *
  */
 /**********************************************************************************************/
-            this.setVisible(false);
-            reconnect=true;
+            reconnectFunc();
         }
     }
+
+    public void restartFunc(){
+        try {
+            comInterface.CloseConnection();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
+        this.setVisible(false);
+        restart=true;
+
+    }
+
+    public void reconnectFunc(){
+
+        try {
+            comInterface.CloseConnection();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
+        this.setVisible(false);
+        reconnect=true;
+    }
+
+
+
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if(status.equals("MYTURN")){
@@ -426,7 +408,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
             int [] coord = getCoordinates(e.getComponent().getLocation());
             int x = coord[0];
             int y = coord[1];
-            int [] response={-1,-1};
             if(!hasBeenShotAt(x, y)){
 /**********************************************************************************************/
 /********************* TODO SHOT
@@ -445,43 +426,42 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 //HIT OR MISS
 
                 //TO DOO :MI küldünk restartot?
-
+                int [] sendFormat=new int[3];
+                sendFormat[0]=coord[0];
+                sendFormat[1]=coord[1];
+                sendFormat[2]=0;
 
                 try {
-                    comInterface.SendData(coord);
-                    response=comInterface.ReceiveData(); // visszakapjuk a [találat,valami,restart]
+                    comInterface.SendData(sendFormat);
+
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
 
-                if(Arrays.equals(response ,resetSign) ){
-                    //TO DOO ha doRestart()
+                lastHitCoordinate[0]=x;
+                lastHitCoordinate[1]=y;
 
-                }
-
-
-                   //comment out!
-                if (response[0]==1){  //a tömb első eleme jelzi ha talált, azaz az értéke =1
-                    shootAtEnemyShipsGUI(x, y, "HIT"); //jelezzük a táblán a találatot
-                    if(response[1]==1){
-                        //jatek vége jött a masik oldalrol -> nyertünk
-                        endoOfGameGUI("WON");
-
-                    }
-
-
-
-
-                    myTurnGUI();     // juhu újra mi jövünk, újra szabad kattintani
-                }
-                else if (response[0]==0) {
-                    shootAtEnemyShipsGUI(x, y, "MISS"); //jelezzük a táblán a hibát
-                    enemysTurnGUI(); // már nem mi jövünk, kattintások továbbra is letiltva
-                    waitForShot();
-                }
             }
         }
 
+    }
+
+
+    public void  responseForShot(int[] response) {
+        if (!hasBeenShotAt(lastHitCoordinate[0], lastHitCoordinate[1])) {
+            if (response[0] == 1) {  //a tömb első eleme jelzi ha talált, azaz az értéke =1
+                shootAtEnemyShipsGUI(lastHitCoordinate[0], lastHitCoordinate[1], "HIT"); //jelezzük a táblán a találatot
+                if (response[1] == 1) {
+                    //jatek vége jött a masik oldalrol -> nyertünk
+                    endoOfGameGUI("WON");
+
+                }
+                myTurnGUI();     // juhu újra mi jövünk, újra szabad kattintani
+            } else if (response[0] == 0) {
+                shootAtEnemyShipsGUI(lastHitCoordinate[0], lastHitCoordinate[1], "MISS"); //jelezzük a táblán a hibát
+                enemysTurnGUI(); // már nem mi jövünk, kattintások továbbra is letiltva
+            }
+        }
     }
 
 

@@ -1,4 +1,8 @@
 package gui_and_control_pack;
+import communicationPack.Network;
+import communicationPack.client;
+import communicationPack.server;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
@@ -15,7 +19,6 @@ public class GameWindow extends JFrame implements ComponentListener {
     static Font PixelFont50;
     static Font PixelFont20;
     String status = "START";
-
 
     GameWindow(){
 
@@ -59,8 +62,9 @@ public class GameWindow extends JFrame implements ComponentListener {
     public void openGamePanel(int port, String mode){
         this.status = "GAMEPANEL";
         this.getContentPane().removeAll();
+
         System.out.print("removed");
-        gamePanel = new GamePanel(port, mode);
+        gamePanel = new GamePanel(port,mode);
         this.getContentPane().add(gamePanel, BorderLayout.CENTER);
         System.out.print("added");
         gamePanel.addComponentListener(this);
