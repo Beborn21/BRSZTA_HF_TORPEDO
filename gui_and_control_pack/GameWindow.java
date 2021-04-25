@@ -24,17 +24,17 @@ public class GameWindow extends JFrame implements ComponentListener {
 
         try{
             // load a custom font in your project folder
-            PixelFont50 = Font.createFont(Font.TRUETYPE_FONT, new File("src/torpedo_gui/PixelMplus12-Bold.ttf")).deriveFont(50f);
+            PixelFont50 = Font.createFont(Font.TRUETYPE_FONT, new File("gui_and_control_pack/PixelMplus12-Bold.ttf")).deriveFont(50f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/torpedo_gui/PixelMplus12-Bold.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("gui_and_control_pack/PixelMplus12-Bold.ttf")));
         }
         catch(IOException | FontFormatException e){ }
 
         try{
             // load a custom font in your project folder
-            PixelFont20 = Font.createFont(Font.TRUETYPE_FONT, new File("src/torpedo_gui/PixelMplus12-Bold.ttf")).deriveFont(20f);
+            PixelFont20 = Font.createFont(Font.TRUETYPE_FONT, new File("gui_and_control_pack/PixelMplus12-Bold.ttf")).deriveFont(20f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/torpedo_gui/PixelMplus12-Bold.ttf")));
+            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("gui_and_control_pack/PixelMplus12-Bold.ttf")));
         }
         catch(IOException | FontFormatException e){ }
 
@@ -72,8 +72,6 @@ public class GameWindow extends JFrame implements ComponentListener {
         System.out.print("repainted");
     }
 
-    static Font getPixelFont50(){ return PixelFont50; }
-    static Font getPixelFont20(){ return PixelFont20; }
 
     @Override
     public void componentResized(ComponentEvent e) { }

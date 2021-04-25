@@ -61,7 +61,7 @@ public class StartPanel extends JPanel implements ActionListener {
         clientbutton.setBounds( 550, 220, 100,35);
         clientbutton.setVisible(true);
         clientbutton.setText("CLIENT");
-        clientbutton.setFont(GameWindow.getPixelFont20());
+        clientbutton.setFont(GameWindow.PixelFont20);
         clientbutton.setBackground(GamePanel.backgroundcolor);
         clientbutton.setBorder(BorderFactory.createMatteBorder(
                 bordersizenotchosen, bordersizenotchosen, bordersizenotchosen, bordersizenotchosen,   GamePanel.targetaquiredcolor));
@@ -75,7 +75,7 @@ public class StartPanel extends JPanel implements ActionListener {
         serverbutton.setBounds( 350, 220, 100,35);
         serverbutton.setVisible(true);
         serverbutton.setText("SERVER");
-        serverbutton.setFont(GameWindow.getPixelFont20());
+        serverbutton.setFont(GameWindow.PixelFont20);
         serverbutton.setBackground(GamePanel.backgroundcolor);
         serverbutton.setBorder(BorderFactory.createMatteBorder(
                 bordersizechosen, bordersizechosen, bordersizechosen, bordersizechosen,   GamePanel.targetaquiredcolor));
@@ -89,7 +89,7 @@ public class StartPanel extends JPanel implements ActionListener {
         submitbutton.setBounds( 450, 500, 100,35);
         submitbutton.setVisible(true);
         submitbutton.setText("SUBMIT");
-        submitbutton.setFont(GameWindow.getPixelFont20());
+        submitbutton.setFont(GameWindow.PixelFont20);
         submitbutton.setBackground(GamePanel.backgroundcolor);
         submitbutton.setBorder(BorderFactory.createMatteBorder(
                 bordersizenotchosen, bordersizenotchosen, bordersizenotchosen, bordersizenotchosen,   GamePanel.targetaquiredcolor));
@@ -115,7 +115,7 @@ public class StartPanel extends JPanel implements ActionListener {
         label.setSize(1000, 100);
         label.setLocation(0, 300);
         label.setForeground(GamePanel.navylabelcolor);
-        label.setFont(GameWindow.getPixelFont50());
+        label.setFont(GameWindow.PixelFont50);
         label.setVisible(true);
         this.add(label);
     }
@@ -125,7 +125,7 @@ public class StartPanel extends JPanel implements ActionListener {
         label.setSize(1000, 100);
         label.setLocation(0, 100);
         label.setForeground(GamePanel.navylabelcolor);
-        label.setFont(GameWindow.getPixelFont50());
+        label.setFont(GameWindow.PixelFont50);
         label.setVisible(true);
         this.add(label);
     }

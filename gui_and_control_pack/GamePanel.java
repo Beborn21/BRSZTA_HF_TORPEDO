@@ -47,15 +47,13 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
     static final Color seacolor = new Color(0x76BED0);
     static final Color shipfoundcolor = new Color(0xFF715B);
     static final Color targetaquiredcolor = new Color(0xFFDD4A);
-    static Font PixelFont50;
-    static Font PixelFont20;
+
 
     GamePanel(int port ,String mode){
         System.out.println("game constructor opened");
         this.mode=mode;
 
         //panel look setup
-        fontSetup();
         this.setBounds(0,0,width,height);
         this.setBackground(backgroundcolor);
         this.setLayout(null);
@@ -157,25 +155,6 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
 
     }
 
-    private void fontSetup(){
-        try{
-            PixelFont50 = Font.createFont(Font.TRUETYPE_FONT, new File("src/torpedo_gui/PixelMplus12-Bold.ttf")).deriveFont(50f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/torpedo_gui/PixelMplus12-Bold.ttf")));
-        }
-        catch(IOException | FontFormatException e){
-
-        }
-        try{
-            PixelFont20 = Font.createFont(Font.TRUETYPE_FONT, new File("src/torpedo_gui/PixelMplus12-Bold.ttf")).deriveFont(20f);
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/torpedo_gui/PixelMplus12-Bold.ttf")));
-        }
-        catch(IOException | FontFormatException e){
-
-        }
-    }
-
     private void addSea(){
 
         int seaborder = 12;
@@ -204,7 +183,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 bordersize, bordersize, bordersize, bordersize,  targetaquiredcolor));
         restartbutton.setText("RESTART");
         restartbutton.setForeground(seacolor);
-        restartbutton.setFont(PixelFont20);
+        restartbutton.setFont(GameWindow.PixelFont20);
         restartbutton.addActionListener(this);
         this.add(restartbutton);
     }
@@ -262,7 +241,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 bordersize, bordersize, bordersize, bordersize,   targetaquiredcolor));
         reconnectbutton.setText("RECONNECT");
         reconnectbutton.setForeground(seacolor);
-        reconnectbutton.setFont(PixelFont20);
+        reconnectbutton.setFont(GameWindow.PixelFont20);
         reconnectbutton.addActionListener(this);
         this.add(reconnectbutton);
 
@@ -273,7 +252,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         turnlabel.setSize(width, 50);
         turnlabel.setLocation(0, toppadding+ targetsize*10+ seabordersize+10);
         turnlabel.setForeground(navylabelcolor);
-        turnlabel.setFont(PixelFont50);
+        turnlabel.setFont(GameWindow.PixelFont50);
         turnlabel.setVisible(true);
         this.add(turnlabel);
     }
@@ -456,8 +435,10 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                     //jatek vége jött a masik oldalrol -> nyertünk
                     endoOfGameGUI("WON");
 
+                }else{
+                    myTurnGUI();     // juhu újra mi jövünk, újra szabad kattintani
                 }
-                myTurnGUI();     // juhu újra mi jövünk, újra szabad kattintani
+
             } else if (response[0] == 0) {
                 shootAtEnemyShipsGUI(lastHitCoordinate[0], lastHitCoordinate[1], "MISS"); //jelezzük a táblán a hibát
                 enemysTurnGUI(); // már nem mi jövünk, kattintások továbbra is letiltva
