@@ -131,6 +131,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
                 }
             }else {
                 response[0] = 0;
+                response[1] = 0;
             }
 
             try {

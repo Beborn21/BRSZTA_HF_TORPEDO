@@ -124,7 +124,8 @@ public class server extends Network {
                         gamePanel.waitForShot(data);    // receive shot
                             break;
                         case 1: System.out.println("Call Repo F shot");
-                            gamePanel.responseForShot(data);   // receive response
+                            gamePanel.responseForShot(data);
+                            // receive response
                             break;
                         case 2:       if(Arrays.equals(data,resetSign)) {gamePanel.restartFunc();}
                         else if(Arrays.equals(data,reConnectSign)){gamePanel.reconnectFunc();}//receive restart
