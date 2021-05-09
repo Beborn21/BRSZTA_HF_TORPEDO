@@ -336,7 +336,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
  *
  */
 /**********************************************************************************************/
-            comInterface.doRestart(); // elküldi a [-100,-100,-100] tömbeli értékeket amit minden vételnél vizsgálunk hogy ez jött-e #magyar
+            comInterface.doRestart();
 
             restartFunc();
 
@@ -358,8 +358,7 @@ public class GamePanel extends JPanel implements ActionListener, MouseListener {
         try {
             comInterface.CloseConnection();
         } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
+            ioException.printStackTrace();        }
 
         this.setVisible(false);
         restart=true;

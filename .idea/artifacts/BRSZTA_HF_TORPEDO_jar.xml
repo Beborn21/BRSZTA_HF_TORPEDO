@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="BRSZTA_HF_TORPEDO:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BRSZTA_HF_TORPEDO_jar</output-path>
+    <root id="archive" name="BRSZTA_HF_TORPEDO.jar">
+      <element id="module-output" name="BRSZTA_HF_TORPEDO" />
+    </root>
+  </artifact>
+</component>
