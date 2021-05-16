@@ -132,7 +132,6 @@ public class server extends Network {
                             break;
                         default:  System.err.println("Invalid data in ReceiverThread ");
                     }
-
                 }
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
